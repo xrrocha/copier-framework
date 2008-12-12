@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><people>
+    <person>
+        <code>123</code>
+        <name>
+            <first-name>Jorge</first-name>
+            <last-name>Valenzuela</last-name>
+        </name>
+        <salary>$7,650</salary>
+        <hiredate>01/01/2001</hiredate>
+    </person>
+    <person>
+        <code>456</code>
+        <name>
+            <first-name>Ricardo</first-name>
+            <last-name>Rocha</last-name>
+        </name>
+        <salary>$5,655.15</salary>
+        <hiredate>02/02/2002</hiredate>
+    </person>
+</people>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="record" basedir="." default="jar">
+    <property name="name" value="record"/>
+    <property name="jar" value="${name}.jar"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="build.dir" value="build"/>
+    <property name="src.dir" value="src"/>
+    
+    <path id="base-classpath">
+        <fileset dir="${lib.dir}">
+        	<include name="*.jar"/>
+        </fileset>
+    </path>
+    
+    <path id="runtime-classpath">
+        <path refid="base-classpath"/>
+        <pathelement location="${jar}"/>
+    </path>
+
+    <target name="jar" depends="compile">
+        <jar destfile="${jar}">
+            <fileset dir="${build.dir}">
+                <include name="**/*.*"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="test" depends="jar">
+    	<java classname="plenix.copier.Main" classpathref="runtime-classpath" fork="yes" dir="./samples">
+    		   <arg value="epg.yaml"/>
+    	</java>
+    </target>
+
+    <target name="compile" depends="setup">
+        <javac destdir="${build.dir}"
+        	   target="1.5" source="1.5" debug="true"
+               deprecation="false" optimize="false" failonerror="true">
+            <src path="${src.dir}"/>
+        	<classpath refid="base-classpath"/>
+        </javac>
+    	<copy todir="${build.dir}">
+            <fileset dir="${src.dir}">
+                <exclude name="*.java"/>
+            </fileset>
+    	</copy>
+    </target>
+
+	<target name="setup">
+		<mkdir dir="${build.dir}"/>
+	</target>
+</project>
