@@ -1,0 +1,24 @@
+---
+load-data:
+  infile:
+    name: '/tmp/mydata.csv'
+    fieldTerminator: ","
+    fieldEncloser: '"'
+    fields:
+      - name: empno
+        type: integer
+      - name: ename
+        type: string
+      - name: sal
+        type: double
+        format: '$###,###.##'
+      - name: hiredate
+        type: date
+        format: 'yyyy/MM/dds'
+  intoTable:
+    name: emp
+    columns:
+      - empno
+      - ename
+      - sal
+      - hiredate

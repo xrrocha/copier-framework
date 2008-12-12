@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+  <bean class="plenix.copier.Copier" id="streamer">
+    <property ref="producer" name="producer"/>
+    <property ref="transformer" name="transformer"/>
+    <property ref="consumer" name="consumer"/>
+  </bean>
+  <bean class="plenix.record.xbase.XBaseRecordSource" id="producer">
+    <property value="paises.dbf" name="filename"/>
+  </bean>
+  <bean class="plenix.record.transformer.ScriptingRecordTransformer" id="transformer">
+    <property value="javascript" name="languageName"/>
+    <property name="scriptText">
+      <value>
+    inputRecord.copyTo(outputRecord);
+    var nombre = outputRecord.getField("NMBRE");
+    // Trimming is necessary because name is right-padded
+    outputRecord.setField("NMBRE", nombre.trim());
+  </value>
+    </property>
+  </bean>
+  <bean class="plenix.record.csv.CSVRecordDestination" id="consumer">
+    <property value="&#9;" name="separator"/>
+    <property value="paises.txt" name="filename"/>
+    <property name="fieldSpecs">
+      <list>
+        <bean class="plenix.record.csv.XFieldSpec">
+          <property value="COD_PAIS" name="name"/>
+          <property value="s" name="type"/>
+        </bean>
+        <bean class="plenix.record.csv.XFieldSpec">
+          <property value="NMBRE" name="name"/>
+          <property value="s" name="type"/>
+        </bean>
+        <bean class="plenix.record.csv.XFieldSpec">
+          <property value="CNTNNTE" name="name"/>
+          <property value="s" name="type"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+</beans>

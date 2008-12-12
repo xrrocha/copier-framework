@@ -1,0 +1,28 @@
+!plenix.copier.Copier
+consumer: &1 !plenix.record.csv.CSVRecordDestination
+   fieldSpecs: &2
+   - &3
+      name: COD_PAIS
+      type: s
+   - &4
+      name: NMBRE
+      type: s
+   - &5
+      name: CNTNNTE
+      type: s
+   filename: paises.txt
+producer: &6 !plenix.record.xbase.XBaseRecordSource
+   filename: paises.dbf
+transformer: &7 !plenix.record.transformer.script.rhino.RhinoRecordTransformer
+   prologScriptSpec: &8
+      name: recordPrologScript
+      text: "function rtrim(str) {\r\n    var lastIndex = str.length - 1\r\n    while (lastIndex >= 0)\
+         \ {\r\n        var chr = str.charAt(lastIndex)\r\n        if (chr != ' ' && chr != '\\t' && chr\
+         \ != '\\r' && chr != '\\n') {\r\n            break\r\n        }\r\n        lastIndex--\r\n  \
+         \  }\r\n    return str.substring(0, lastIndex + 1)\r\n}\r\n"
+   scriptSpec: &9
+      name: recordTransformerScript
+      text: "record.NMBRE = rtrim(record.NMBRE)\r\n"
+--- *6
+--- *7
+--- *1
