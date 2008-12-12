@@ -32,20 +32,20 @@ public class Copier<E> {
 		}
 	}
 
-	public Destination<E> getConsumer() {
+	public Destination<E> getDestination() {
 		return destination;
 	}
 
-	public void setConsumer(Destination<E> consumer) {
-		this.destination = consumer;
+	public void setDestination(Destination<E> destination) {
+		this.destination = destination;
 	}
 
-	public Source<E> getProducer() {
+	public Source<E> getSource() {
 		return source;
 	}
 
-	public void setProducer(Source<E> producer) {
-		this.source = producer;
+	public void setSource(Source<E> source) {
+		this.source = source;
 	}
 
 	public Transformer<E> getTransformer() {
