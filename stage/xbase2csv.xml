@@ -1,0 +1,21 @@
+<copy>
+
+  <from-xbase>
+    <filename>paises.dbf</filename>
+  </from-xbase>
+  
+  <script-transformer language="javascript"><![CDATA[
+    inputRecord.copyTo(outputRecord);
+    var nombre = outputRecord.getField("NMBRE");
+    // Trimming is necessary because name is right-padded
+    outputRecord.setField("NMBRE", nombre.trim());
+  ]]></script-transformer>
+
+  <to-csv separator="&#9;">
+    <filename>paises.txt</filename>
+    <field name="COD_PAIS" type="string" />
+    <field name="NMBRE" type="string" />
+    <field name="CNTNNTE" type="string" />
+  </to-csv>
+
+</copy>

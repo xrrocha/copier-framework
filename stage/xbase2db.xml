@@ -1,0 +1,35 @@
+<copy>
+
+  <from-xbase>
+    <filename>inventar.dbf</filename>
+  </from-xbase>
+  
+  <to-db>
+  	<statement>
+  		INSERT INTO producto(codigo, generico, nombre, existencia)
+  		VALUES(?, ?, ?, ?)
+  	</statement>
+  	<bind field="CODIGO"/>
+  	<bind field="GENERICO"/>
+  	<bind field="DESCRIP"/>
+  	<bind field="SALDO"/>
+  	
+  	<mode batch-size="1024" commit="true"/>
+  	
+  	<datasource>
+  	<!-- 
+  	 -->
+  		<driver>org.postgresql.Driver</driver>
+  		<url>jdbc:postgresql://localhost:5432/test</url>
+  		<username>test</username>
+  		<password>test</password>
+  	 <!-- 
+  	 	<driver>com.microsoft.jdbc.sqlserver.SQLServerDriver</driver>
+  	 	<url>jdbc:microsoft:sqlserver://localhost:1433;databaseName=test</url>
+  	 	<username>test</username>
+  	 	<password>felino</password>
+  	 -->
+  	</datasource>
+  </to-db>
+
+</copy>

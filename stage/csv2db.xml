@@ -1,0 +1,31 @@
+<copy>
+
+  <from-csv separator="&#9;" header-record="true">
+    <filename>emp.csv</filename>
+    <field name="code" type="number"/>
+    <field name="name" type="string"/>
+    <field name="hiredate" type="date" format="yyyy/MM/dd"/>
+    <field name="salary" type="number" format="$###,###.##"/>
+    <field name="department" type="number"/>
+  </from-csv>
+  
+  <to-db>
+    <statement>
+      INSERT INTO emp(empno, sal,  hiredate, deptno, ename)
+      VALUES (?, ?, ?, ?, ?)
+    </statement>
+    <bind field="code"/>
+    <bind field="salary"/>
+    <bind field="hiredate"/>
+    <bind field="department"/>
+    <bind field="name"/>
+
+    <datasource>
+      <driver>oracle.jdbc.driver.OracleDriver</driver>
+      <url>jdbc:oracle:thin:@localhost:1521:orcl</url>
+      <username>demo</username>
+      <password>demo</password>
+    </datasource>
+  </to-db>
+  
+</copy>

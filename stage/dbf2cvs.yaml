@@ -1,0 +1,25 @@
+load data:
+  from xbase file:
+    name: paises.dbf
+  to cvs file:
+    name: paises.txt
+    fields:
+      - name; COD_PAIS
+      - name: NMBRE
+      - name: CNTNNTE
+        type: string
+  javascript record transformer:
+    prolog script: |
+      function rtrim(str) {
+        var lastIndex = str.length - 1
+        while (lastIndex >= 0) {
+          var chr = str.charAt(lastIndex)
+          if (chr != ' ' && chr != '\\t' && chr != '\\r' && chr != '\\n') {
+            break
+          }
+          lastIndex--
+        }
+        return str.substring(0, lastIndex + 1)
+      } 
+    transformation script: |
+      record.NMBRE = rtrim(record.NMBRE)
