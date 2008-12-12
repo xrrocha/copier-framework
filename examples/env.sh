@@ -1,6 +1,6 @@
 #PS=;
 PS=:
-CLASSPATH="$CLASSPATH${PS}../build"
+CLASSPATH="$CLASSPATH${PS}../build/classes/main"
 
 for lib  in ../lib/*.jar
 do
