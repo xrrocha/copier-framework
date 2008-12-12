@@ -1,5 +1,5 @@
 ---
-    producer: !csvProducer
+    source: !csvProducer
         separator: ";"
         headerRecord: true
         inputStreamSource: !fileInput { filename: "epg.txt" }
@@ -21,7 +21,7 @@
             - { name: "valorTotal" }
             - { name: "valorDeducciones" }
             - { name: "valorNeto" }
-    consumer: !saxConsumer
+    destination: !saxConsumer
         outputStreamSource: !fileOutput { filename: "epg.xml" }
         stylesheetInputStreamSource: !fileInput { filename: "epg.xsl" }
         rootElementName: "raiz"

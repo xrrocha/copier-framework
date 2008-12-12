@@ -28,9 +28,9 @@ public class SimpleYamlTester {
 			XBaseRecordSource recordProducer = new XBaseRecordSource();
 			RhinoRecordTransformer recordTransformer = new RhinoRecordTransformer();
 			CSVRecordDestination recordConsumer = new CSVRecordDestination();
-			copier.setProducer(recordProducer);
+			copier.setSource(recordProducer);
 			copier.setTransformer(new InSituTransformerAdapter<Record>(recordTransformer));
-			copier.setConsumer(recordConsumer);
+			copier.setDestination(recordConsumer);
 			
 			recordProducer.setFilename("paises.dbf");
 
