@@ -1,0 +1,17 @@
+---
+    producer: !fixedLengthProducer
+        inputStreamSource: !fileInput { filename: "people.txt" }
+        length: 55
+        trim: true
+        fixedFields: &fields
+            - { name: "code", offset: 0, length: 3 }
+            - { name: "fname", offset: 3, length: 16 }
+            - { name: "lname", offset: 19, length: 16 }
+            - { name: "salary", type: NUMBER, offset: 35, length: 9, formatString: "$###,###.##" }
+            - { name: "hiredate", type: DATE, offset: 44, length: 10, formatString: "MM/dd/yyyy" }
+    consumer: !saxConsumer
+        outputStreamSource: !fileOutput { filename: "people.xml" }
+        stylesheetInputStreamSource: !fileInput { filename: "people.xsl" }
+        rootElementName: "people"
+        recordElementName: "person"
+        fields: *fields

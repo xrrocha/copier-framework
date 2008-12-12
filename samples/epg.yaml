@@ -1,0 +1,29 @@
+---
+    producer: !csvProducer
+        separator: ";"
+        headerRecord: true
+        inputStreamSource: !fileInput { filename: "epg.txt" }
+        fields: &fields
+            - { name: "tipoDocumento" }
+            - { name: "numeroDocumento" }
+            - { name: "idDependencia" }
+            - { name: "idConcepto" }
+            - { name: "valor" }
+            - { name: "idConceptoDescuento" }
+            - { name: "tipoDocumentoBeneficiario" }
+            - { name: "numeroDocumentoBeneficiario" }
+            - { name: "valorDescuento" }
+            - { name: "idMedioPago" }
+            - { name: "tipoDocumentoEntidadFinanciera" }
+            - { name: "numeroDocumentoEntidadFinanciera" }
+            - { name: "tipoCuenta" }
+            - { name: "numeroCuenta" }
+            - { name: "valorTotal" }
+            - { name: "valorDeducciones" }
+            - { name: "valorNeto" }
+    consumer: !saxConsumer
+        outputStreamSource: !fileOutput { filename: "epg.xml" }
+        stylesheetInputStreamSource: !fileInput { filename: "epg.xsl" }
+        rootElementName: "raiz"
+        recordElementName: "registro"
+        fields: *fields
