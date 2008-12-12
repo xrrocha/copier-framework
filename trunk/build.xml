@@ -2,13 +2,23 @@
 
 <project name="record" basedir="." default="jar">
     <property name="name" value="record"/>
-    <property name="jar" value="${name}.jar"/>
-    <property name="lib.dir" value="lib"/>
-    <property name="build.dir" value="build"/>
-    <property name="build.java.dir" value="${build.dir}/java"/>
-    <property name="build.test.dir" value="${build.dir}/test"/>
-    <property name="test.script" value="epg.yaml"/>
+    
+	<property name="lib.dir" value="lib"/>
+    
+	<property name="build.dir" value="build"/>
+    <property name="build.classes.dir" value="${build.dir}/classes"/>
+    <property name="build.classes.main.dir" value="${build.classes.dir}/main"/>
+    <property name="build.classes.test.dir" value="${build.classes.dir}/test"/>
+
     <property name="src.dir" value="src"/>
+    <property name="src.main.dir" value="${src.dir}/main"/>
+    <property name="src.test.dir" value="${src.dir}/test"/>
+
+    <property name="samples.dir" value="samples"/>
+	
+	<property name="test.script" value="epg.yaml"/>
+    
+    <property name="jar" value="${build.dir}/${name}.jar"/>
     
     <path id="base-classpath">
         <fileset dir="${lib.dir}">
@@ -20,10 +30,15 @@
         <path refid="base-classpath"/>
         <pathelement location="${jar}"/>
     </path>
+    
+    <path id="test-classpath">
+        <path refid="runtime-classpath"/>
+        <pathelement location="${build.classes.test.dir}"/>
+    </path>
 
     <target name="jar" depends="compile">
         <jar destfile="${jar}">
-            <fileset dir="${build.java.dir}">
+            <fileset dir="${build.classes.main.dir}">
                 <include name="**/*.*"/>
             </fileset>
         </jar>
@@ -31,26 +46,43 @@
 
     <target name="test" depends="jar">
     	<echo message="Testing with ${test.script}"/>
-    	<java classname="plenix.copier.Main" classpathref="runtime-classpath" fork="yes" dir="./samples">
+    	<java classname="plenix.copier.Main" classpathref="runtime-classpath" fork="yes" dir="${samples.dir}">
     		   <arg value="${test.script}"/>
     	</java>
     </target>
 
     <target name="compile" depends="setup">
-        <javac destdir="${build.java.dir}"
-        	   target="1.5" source="1.5" debug="true"
+        <javac destdir="${build.classes.main.dir}"
+               target="1.5" source="1.5" debug="true"
                deprecation="false" optimize="false" failonerror="true">
-            <src path="${src.dir}"/>
-        	<classpath refid="base-classpath"/>
+            <src path="${src.main.dir}"/>
+            <classpath refid="base-classpath"/>
         </javac>
-    	<copy todir="${build.java.dir}">
-            <fileset dir="${src.dir}">
+        <copy todir="${build.classes.main.dir}">
+            <fileset dir="${src.main.dir}">
                 <exclude name="*.java"/>
             </fileset>
-    	</copy>
+        </copy>
     </target>
 
+    <target name="compile-test" depends="compile">
+            <javac destdir="${build.classes.test.dir}"
+                   target="1.5" source="1.5" debug="true"
+                   deprecation="false" optimize="false" failonerror="true">
+                <src path="${src.test.dir}"/>
+                <classpath refid="base-classpath"/>
+            </javac>
+            <copy todir="${build.classes.test.dir}">
+                <fileset dir="${src.test.dir}">
+                    <exclude name="*.java"/>
+                </fileset>
+            </copy>
+        </target>
+
 	<target name="setup">
-		<mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.classes.main.dir}"/>
+        <mkdir dir="${build.classes.test.dir}"/>
 	</target>
 </project>
