@@ -19,7 +19,7 @@ public class Main {
     
     static {
         try {
-            Enumeration<URL> locations = Main.class.getClassLoader().getResources("recordConfig.yaml");
+            Enumeration<URL> locations = Main.class.getClassLoader().getResources("recordCopierConfig.yaml");
             while (locations.hasMoreElements()) {
                 URL location = locations.nextElement();
                 YamlReader reader = new YamlReader(new InputStreamReader(location.openStream()));

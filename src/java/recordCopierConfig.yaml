@@ -1,0 +1,27 @@
+--- # Component class tag names
+  fileInput: "plenix.util.io.FileInputStreamSource"
+  fileOutput: "plenix.util.io.FileOutputStreamSource"
+
+  field: "plenix.record.util.FieldSpec"
+  fixedField: "plenix.record.util.FixedFieldSpec"
+
+  csvSource: "plenix.record.csv.CSVRecordSource"
+  csvDestination: "plenix.record.csv.CSVRecordDestination"
+
+  fixedLengthSource: "plenix.record.fixed.FixedLengthRecordSource"
+  fixedLengthDestination: "plenix.record.fixed.FixedLengthRecordDestination"
+
+  jdbcSource: "plenix.record.jdbc.JDBCRecordSource"
+  jdbcDestination: "plenix.record.jdbc.JDBCRecordDestination"
+
+  xbaseSource: "plenix.record.xbase.XBaseRecordSource"
+  xbaseDestination: "plenix.record.xbase.XBaseRecordDestination"
+
+  xmlDestination: "plenix.record.xml.sax.SAXRecordDestination"
+  
+--- # Property element names
+  plenix.record.util.FieldSpecHolder:
+    fields: "plenix.record.util.FieldSpec"
+  plenix.record.fixed.FixedLengthCopierComponent: # Report bug -> property names seem to be global across target classes
+    fixedFields: "plenix.record.util.FixedFieldSpec"
+    
