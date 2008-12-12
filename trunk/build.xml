@@ -5,6 +5,9 @@
     <property name="jar" value="${name}.jar"/>
     <property name="lib.dir" value="lib"/>
     <property name="build.dir" value="build"/>
+    <property name="build.java.dir" value="${build.dir}/java"/>
+    <property name="build.test.dir" value="${build.dir}/test"/>
+    <property name="test.script" value="epg.yaml"/>
     <property name="src.dir" value="src"/>
     
     <path id="base-classpath">
@@ -20,15 +23,16 @@
 
     <target name="jar" depends="compile">
         <jar destfile="${jar}">
-            <fileset dir="${build.dir}">
+            <fileset dir="${build.java.dir}">
                 <include name="**/*.*"/>
             </fileset>
         </jar>
     </target>
 
     <target name="test" depends="jar">
+    	<echo message="Testing with ${test.script}"/>
     	<java classname="plenix.copier.Main" classpathref="runtime-classpath" fork="yes" dir="./samples">
-    		   <arg value="epg.yaml"/>
+    		   <arg value="${test.script}"/>
     	</java>
     </target>
 
