@@ -1,4 +1,4 @@
-package plenix.record.xml.sax;
+package plenix.record.xml;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
@@ -19,7 +19,7 @@ import plenix.record.util.FieldSpec;
 import plenix.record.util.OutputStreamRecordDestination;
 import plenix.util.io.InputStreamSource;
 
-public class SAXRecordDestination extends OutputStreamRecordDestination {
+public class XMLRecordDestination extends OutputStreamRecordDestination {
     private String outputMethod = Method.XML;
     private InputStreamSource stylesheetInputStreamSource;
     
@@ -64,8 +64,7 @@ public class SAXRecordDestination extends OutputStreamRecordDestination {
             String fieldString = fieldSpec.format(fieldValue);
             if (fieldString != null) {
                 handler.startElement(uri, fieldName, fieldName, attrs);
-                char[] chars = fieldString.toCharArray();
-                handler.characters(chars, 0, chars.length);
+                handler.characters(fieldString.toCharArray(), 0, fieldString.length());
                 handler.endElement(uri, fieldName, fieldName);
             }
         }

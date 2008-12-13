@@ -17,7 +17,7 @@
   xbaseSource: "plenix.record.xbase.XBaseRecordSource"
   xbaseDestination: "plenix.record.xbase.XBaseRecordDestination"
 
-  xmlDestination: "plenix.record.xml.sax.SAXRecordDestination"
+  xmlDestination: "plenix.record.xml.XMLRecordDestination"
   
 --- # Property element names
   plenix.record.util.FieldSpecHolder:
