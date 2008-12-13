@@ -204,8 +204,6 @@ public static void main(String[] args) {
             <em>Don't call us, we'll call you</em>.
         </p>
         <p>
-            Because frameworks model the portions of an application domain that
-            are not subject to change
         </p>
     </body>
 </page>
