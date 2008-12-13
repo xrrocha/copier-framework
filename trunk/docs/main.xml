@@ -28,8 +28,13 @@
             declarative applications in its problem domain.
         </p>
 
-        <h1>Object-oriented Frameworks</h1>
-        <h2>General Concepts</h2>
+        <h1>General Concepts</h1>
+        <p>
+            This section presents general concepts related to the design of
+            object-oriented frameworks by illustrating a simple example
+            that illustrates frameworks in the small.
+        </p>
+        <h2>An Example Framework</h2>
         <p>
             An <em>object-oriented framework</em> is a reusable software library
             that captures the portions of an application domain that do not
@@ -94,12 +99,13 @@ public void copy() {
     destination.close();
 }
         </source>
+        <h2>Framework Classes and Hot Spots</h2>
         <p>
             Note that because both <code>Source</code> and
             <code>Destination</code> are interfaces there can
             be multiple, <em>replaceable</em> implementations
             corresponding to different file formats as depicted
-            below.
+            below:
         </p>
         <image src="basic-framework-2.png"/>
         <p>
@@ -120,6 +126,7 @@ public void copy() {
             spots for which domain-specific implementations can be written to
             build applications on top of the framework.
         </p>
+        <h2>Applications</h2>
         <p>
             An <em>application</em> of the framework is an executable
             configuration and wiring together of hot spot implementations.
@@ -160,6 +167,7 @@ public static void main(String[] args) {
             configuration and wiring. This allows for
             <em>declarative</em> framework instantiation.
         </p>
+        <h2>Configuration Files</h2>
         <p>
             Declarative framework instantiations are usually stored outside
             program code in the form of <em>configuration files</em>.
@@ -168,7 +176,7 @@ public static void main(String[] args) {
             Yaml configuration is equivalent to the above Java code:
         </p>
         <source>--- !org.plenix.copier.Copier
-    source: !org.plenix.record.xbase.XBaseRecordSource
+    source: !org.plenix.record.xbase.XBaseSource
         filename: "people.dbf"
     destination: !org.plenix.record.xml.XMLDestination
         rootElementName: "people"
@@ -195,7 +203,7 @@ public static void main(String[] args) {
         </p>
         <p>
             When reusing a framework, on the other hand, it is the framework
-            that has control of the flow of execution. Application code
+            that controls the flow of execution. Application code
             gets called if and when the framework sees fit.
         </p>
         <p>
@@ -203,7 +211,246 @@ public static void main(String[] args) {
             or, humorously, as the "Hollywood Principle":
             <em>Don't call us, we'll call you</em>.
         </p>
+        <h2>Dependency Injection</h2>
         <p>
+            Central to the notion of framework is that framework classes do
+            not know what specific implementations of its hot spots are used
+            at runtime. Thus, an external agent must take on the responsibility
+            of instantiating, configuring and wiring together framework
+            components in order to build an executable application.
         </p>
+        <p>
+            Framework classes <em>depend</em> on their hot spots to provide
+            actual application-specific functionality. Application-specific
+            classes as well framework-provided hot spot implementations
+            tailored to application-specific needs are referred to as
+            <em>dependencies</em> of the framework class.
+        </p>
+        <p>
+            The process of supplying properly configured application-specific
+            hot spot implementations is referred to as
+            <em>dependency injection</em>. This term emphasizes the notion
+            that dependency resolution is carried out by an agent other than
+            the framework classes themselves.
+        </p>
+
+        <h1>The Record Copier</h1>
+        <p>
+            This section elaborates on the record copier framework to
+            illustrate how frameworks evolve.
+        </p>
+        <h2>Copying Framework</h2>
+        <p>
+            Closer examination reveals that the <em>essence</em> of
+            copying is not restricted to <code>Record</code>s at all.
+            In fact, objects of <em>any</em> type can be copied between
+            sources and destinations following the simple but generic
+            logic stated so far.
+        </p>
+        <p>
+            An appropriate way of capturing this genericity and decouple
+            our framework class from the notion of <code>Record</code> is
+            parametrizing the class as depicted below:
+        </p>
+        <image src="basic-framework-3.png"/>
+        <p>
+            This class model yields an implementation like:
+        </p>
+        <source><![CDATA[// Parametrized copier
+public class Copier<E> {
+    private Source<E> source;
+    private Destination<E> destination;
+
+    public void copy() {
+        source.open();
+        destination.open();
+
+        E element;
+        while ((e = source.get()) != null) {
+            destination.put(e);
+        }
+
+        source.close();
+        destination.close();
+    }
+    . . .
+}]]></source>
+        <note>
+            This simple implementation does not yet take into account
+            exception handling.
+        </note>
+
+        <h2>What's in a <code>Record</code>?</h2>
+        <image src="basic-record.png"/>
+        <p>
+            In its initial incarnation, a <code>Record</code> is simply a
+            structure that maps field names to scalar <code>String</code>
+            field values. Subsequent version of this class will support
+            typed fields.
+        </p>
+
+        <h2>A Concrete Example: Delimited File Record Source</h2>
+        <image src="DelimitedFileRecordSource.png"/>
+        <p>
+            This class implements a record source that reads records from
+            a delimited file as follows:
+        </p>
+        <source><![CDATA[// A delimited file record source
+public class DelimitedFileRecordSource implements Source<Record> {
+    private String filename;
+    private String separator = "\t";
+    private List<String> fieldNames;
+
+    private BufferedReader in;
+
+    public void open() {
+        in = new BufferedReader(new FileReader(filename));
+    }
+
+    public Record get() {
+        String line = in.readLine();
+        if (line == null) {
+            return null;
+        }
+        Record record = new Record();
+        String[] fieldValues = line.split(separator);
+        for (int i = 0; i < fieldValues.length && i < fieldNames.size(); i++) {
+            record.setField(fieldNames.get(i), fieldValues[i]);
+        }
+        return record;
+    }
+
+    public void close() {
+        in.close();
+    }
+}
+        ]]></source>
+
+        <h2>Another Concrete Example: Delimited File Record Destination</h2>
+        <image src="DelimitedFileRecordDestination.png"/>
+        <p>
+            This class writes a record into a delimited file output file
+            as follows:
+        </p>
+        <source><![CDATA[// A delimited file record destination
+public class DelimitedFileRecordDestination implements Destination<Record> {
+    private String filename;
+    private String separator = "\t";
+    private List<String> fieldNames;
+
+    private PrintWriter out;
+
+    public void open() {
+        out = new PrintWriter(new FileWriter(filename), true);
+    }
+
+    public void put(Record  record) {
+        for (int i = 0; i < fieldNames.length; i++) {
+            if (i > 0) {
+                out.print(separator);
+            }
+            String fieldValue = record.get(fieldNames[i]);
+            if (fieldValue != null) {
+                out.print(fieldValue);
+            }
+        }
+        out.println();
+    }
+
+    public void close() {
+        out.close();
+    }
+}]]></source>
+
+        <h2>Factoring Out Commonality in Delimited File Components</h2>
+        <p>
+            As can be seen in the above examples, the two classes share a
+            common configuration consisting of the file name, separator and
+            list of field names. This commonality can be factored out in
+            an abstract superclass <code>DelimitedFileRecordComponent</code>
+            as follows:
+        </p>
+        <image src="DelimitedFileRecordComponent.png"/>
+
+        <h2>Improving on Input and Output</h2>
+        <p>
+            So far, our examples classes have used a <code>String</code>
+            <em>filename</em> property that is used to open operating system
+            files only.
+        </p>
+        <p>
+            However, we'd like to decouple input and output from this specific
+            mechanism so that, for example, input can come from a URL or
+            output can go to a socket output stream.
+        </p>
+        <p>
+            In order to allow this we now add two abstractions:
+        </p>
+        <ul>
+            <li>
+                <code>InputStreamSource</code>: a component that can
+                repeatedly return an input stream pointing to the same
+                underlying resource.
+            </li>
+            <li>
+                <code>OutputStreamSource</code>: a component that can
+                repeatedly return an output stream pointing to the same
+                underlying resource.
+            </li>
+        </ul>
+        <image src="input-output-source.png"/>
+        <p>
+            Thus, for example, the implementation of
+            <code>FileInputStreamSource</code> would look like:
+        </p>
+        <source><![CDATA[// A file-based input stream source
+public class FileInputStreamSource implements InputStreamSource {
+    private String filename;
+
+    public InputStream getInputStream() {
+        return new FileInputStream(filename);
+    }
+    . . .
+}]]></source>
+        <p>
+            Through the use of these abstractions it is possible now to
+            implement our record components so that their input or output
+            is not limited to the local filesystem:
+        </p>
+        <image src="DelimitedFileRecordComponent-2.png"/>
+        <p>
+            The implementation for <code>DelimitedFileRecordDestination</code>
+            is now:
+        </p>
+        <source>// An improved version with generalized output
+public class DelimitedFileRecordDestination implements Destination&lt;Record&gt; {
+    private String separator = "\t";
+    private List&lt;String&gt; fieldNames;
+    <u>private OutputStreamSource outputStreamSource;</u>
+
+    private PrintWriter out;
+
+    public void open() {
+        out = new PrintWriter(new OutputStreamWriter(<u>outputStreamSource.getOutputSource()</u>), true);
+    }
+
+    public void put(Record  record) {
+        for (int i = 0; i &lt; fieldNames.length; i++) {
+            if (i &gt; 0) {
+                out.print(separator);
+            }
+            String fieldValue = record.get(fieldNames[i]);
+            if (fieldValue != null) {
+                out.print(fieldValue);
+            }
+        }
+        out.println();
+    }
+
+    public void close() {
+        out.close();
+    }
+}</source>
+
     </body>
 </page>
