@@ -35,7 +35,7 @@ public class Main {
                             if (logger.isLoggable(Level.FINE)) logger.fine("INIT: Tag '" + tagName + "' maps to class '" + clazz.getName() + "'");
                             classTagMap.put(tagName, clazz);
                         } catch (Exception e) {
-                            logger.severe("Error loading class '" + className + "'");
+                            logger.severe("Error loading class '" + className + "': " + e);
                         }
                     }
                 }
@@ -56,7 +56,7 @@ public class Main {
                             }
                             propertyMap.put(targetClass, propertyClassMap);
                         } catch (Exception e) {
-                            logger.severe(e.toString());
+                            logger.severe("Error setting property type for '" + className + "': " + e);
                         }
                     }
                 }
