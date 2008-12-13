@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="page.xsl" type="text/xml"?>
+<page>
+    <head>
+        <title>The &lt;&lt;Record Copier&gt;&gt; Framework</title>
+    </head>
+    <body>
+        <h1>Introduction</h1>
+        <p>
+            This tutorial introduces <em>object-oriented frameworks</em>
+            through a simple example implemented in Java.
+        </p>
+        <p>
+            The application domain used to illustrate framework development
+            is that of converting between disparate file formats such as
+            transforming an xbase (<em>dbf</em>) file to delimited format or
+            loading a database table from a fixed-length file.
+        </p>
+        <p>
+            The notion of object-oriented framework is first introduced as a
+            design discipline that captures what does not change in an
+            application domain while leaving room for future inclusion of
+            those features that do change.
+        </p>
+        <p>
+            The initial simple example is subsequently refined until it
+            becomes a general-purpose tool that can be used to implement
+            declarative applications in its problem domain.
+        </p>
+
+        <h1>Object-oriented Frameworks</h1>
+        <h2>General Concepts</h2>
+        <p>
+            An <em>object-oriented framework</em> is a reusable software library
+            that captures the portions of an application domain that do not
+            change from case to case. The portions of the application domain
+            that do change are left partially defined as interfaces or
+            abstract classes to be implemented in application-specific ways.
+        </p>
+        <p>
+            In order to illustrate this point, let's consider the process of
+            reading records from a source file in order to write each record
+            onto a destination file. The pseudo-code for this would be something
+            like:
+        </p>
+        <source>// Copy files
+open input file
+open output file
+while there are input records
+    read input record
+    write record onto output file
+close input file
+close output file</source>
+        <p>
+            This suggests the need for the following abstractions:
+        </p>
+        <ul>
+            <li>
+                A <code>Record</code> object that represents the data
+                being copied over
+            </li>
+            <li>
+                A <code>Source</code> that can be repeatedly asked to
+                produce records from an input file
+            </li>
+            <li>
+                A <code>Destination</code> onto which records can be
+                written
+            </li>
+        </ul>
+        <p>
+            Thus, a first-cut approximation to our requirement can be
+            depicted in UML as:
+        </p>
+        <image src="basic-framework-1.png"/>
+        <p>
+            Here, the <code>Copier</code> framework class (the one that
+            captures common behavior) relies on <code>Source</code> as
+            a producer of records and <code>Destination</code> as a
+            consumer of records. The Java code for the <code>copy</code>
+            operation would look like:
+        </p>
+        <source>// Copy records
+public void copy() {
+    source.open();
+    destination.open();
+
+    Record record;
+    while ((record = source.get()) != null) { // null => EOF
+        destination.put(record);
+    }
+
+    source.close();
+    destination.close();
+}
+        </source>
+        <p>
+            Note that because both <code>Source</code> and
+            <code>Destination</code> are interfaces there can
+            be multiple, <em>replaceable</em> implementations
+            corresponding to different file formats as depicted
+            below.
+        </p>
+        <image src="basic-framework-2.png"/>
+        <p>
+            The logic for <code>Copier</code>'s <code>copy</code> operation,
+            however, does not change depending on what specific file format
+            is used to produce or consume records.
+        </p>
+        <p>
+            Because it captures common behavior that does not change from
+            application to application, <code>Copier</code> is said to be
+            a <em>framework</em> class.
+        </p>
+        <p>
+            The interfaces or abstract classes that model the portions of the
+            domain that <em>can</em> change from application to application
+            are called <em>hot spots</em>. In our example, interfaces
+            <code>Source</code> and <code>Destination</code> are the hot
+            spots for which domain-specific implementations can be written to
+            build applications on top of the framework.
+        </p>
+        <p>
+            An <em>application</em> of the framework is an executable
+            configuration and wiring together of hot spot implementations.
+            In general, frameworks are not themselves executable. In order
+            to obtain a running application it is necessary to
+            instantiate the framework classes as augmented with
+            application-specific configurations.
+        </p>
+        <p>
+            As an example, consider the following, "manual" framework
+            instantiation:
+        </p>
+        <source>// A sample framework instantiation
+public static void main(String[] args) {
+    // 1. Instantiate and configure the source hot spot
+    XBaseSource source = new XBaseSource();
+    source.setFilename("people.dbf");
+
+    // 2. Instantiate and configure the destination hot spot
+    XMLDestination destination = new XMLDestination();
+    destination.setRootElementName("people");
+    destination.setRecordElementName("person");
+    destination.setXslStylesheet("people.xsl");
+    destination.setOutputFilename("people.xml");
+
+    // 3. Instantiate and configure the framework class
+    Copier copier = new Copier();
+    copier.setSource(source);
+    copier.setDestination(destination);
+
+    // 4. Run the application
+    copier.copy();
+}
+        </source>
+        <p>
+            Note how the framework instantiation does not contain
+            application <em>logic</em> as such but only instantiation,
+            configuration and wiring. This allows for
+            <em>declarative</em> framework instantiation.
+        </p>
+        <p>
+            Declarative framework instantiations are usually stored outside
+            program code in the form of <em>configuration files</em>.
+            Common configuration formats are
+            <a href="http://yaml.org/">Yaml</a> and XML. The following
+            Yaml configuration is equivalent to the above Java code:
+        </p>
+        <source>--- !org.plenix.copier.Copier
+    source: !org.plenix.record.xbase.XBaseRecordSource
+        filename: "people.dbf"
+    destination: !org.plenix.record.xml.XMLDestination
+        rootElementName: "people"
+        recordElementName: "person"
+        xslStylsheet: "people.xsl"
+        outputFilename: "people.xml"
+        </source>
+        <p>
+            By using a configuration file like this, application instantiation
+            and execution are greatly simplified:
+        </p>
+        <source>// Application instantiation and execution
+public static void main(String[] args) {
+    YamlReader reader = new YamlReader(new FileReader(args[0]));
+    Copier copier = reader.read(Copier.class);
+    copier.copy();
+}</source>
+        <h2>The <em>Hollywood Principle</em></h2>
+        <p>
+            Software libraries are probably the most common form of code reuse.
+            When an application makes use of a library it is the application
+            that dictates the flow of control: library services are invoked
+            if and when the application sees fit.
+        </p>
+        <p>
+            When reusing a framework, on the other hand, it is the framework
+            that has control of the flow of execution. Application code
+            gets called if and when the framework sees fit.
+        </p>
+        <p>
+            This is frequently referred to as <em>inversion of control</em>
+            or, humorously, as the "Hollywood Principle":
+            <em>Don't call us, we'll call you</em>.
+        </p>
+        <p>
+            Because frameworks model the portions of an application domain that
+            are not subject to change
+        </p>
+    </body>
+</page>

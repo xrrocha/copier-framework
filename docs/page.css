@@ -1,0 +1,60 @@
+body {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-right: 16px;
+    margin-left: 16px;
+    text-align: justify;
+    font-family: Verdana,Arial,Helvetica;
+    background-color: #fcefd0;
+    background-repeat: repeat;
+    font-size: 110%
+}
+a.title {
+  font-weight: bold;
+}
+a:link {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: blue;
+  text-decoration: underline;
+}
+h1.topTitle {
+    color: white;
+    background-color: navy;
+    text-align: center;
+}
+.codeContainer {
+    width: 75%;
+    padding: .05cm;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 16px;
+    border: medium double navy;
+    color: navy;
+    font-size: 100%;
+    background-color: #ffff99;
+    font-family: "Lucida Typewriter";
+}
+code.snippet {
+    text-align: left;
+}
+code.pseudocode {
+    text-align: left;
+    font-style: italic;
+}
+ul.other {
+    list-style-image: url("hand.png")
+}
+li {
+    color: black;
+}
+ul.slide {
+    list-style: outside;
+}
+li.slide {
+    color: green;
+    margin-top: 12px;
+}
