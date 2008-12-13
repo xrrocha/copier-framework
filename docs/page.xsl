@@ -28,14 +28,29 @@
         </table>
     </xsl:template>
 
+    <xsl:template match="note">
+        <blockquote style="font-size: 90%">
+            <table border="0">
+                <tr>
+                    <td valign="top">
+                        <img src="hand.png"/>
+                    </td>
+                    <td valign="top">
+                        <i><xsl:apply-templates/></i>
+                    </td>
+                </tr>
+            </table>
+        </blockquote>
+    </xsl:template>
+
     <xsl:template match="source">
         <table border="1" align="center">
             <tr>
                 <td style="color: navy; background-color: #ffff99">
                     <pre>
-                        <code style="font-family: Lucida Typewriter">
+                        <div style="font-family: 'Lucida Typewriter'">
                             <strong><xsl:apply-templates/></strong>
-                        </code>
+                        </div>
                     </pre>
                 </td>
             </tr>
