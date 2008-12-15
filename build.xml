@@ -15,7 +15,7 @@
     <property name="src.main.dir" value="${src.dir}/main"/>
     <property name="src.test.dir" value="${src.dir}/test"/>
 
-    <property name="samples.dir" value="samples"/>
+    <property name="examples.dir" value="examples"/>
 	
 	<property name="test.script" value="epg.yaml"/>
     
@@ -46,8 +46,9 @@
     </target>
 
     <target name="test" depends="jar">
-    	<echo message="Testing with ${test.script}"/>
-    	<java classname="plenix.copier.Main" classpathref="runtime-classpath" fork="yes" dir="${samples.dir}">
+        <echo message="Testing with ${test.script}"/>
+    	<java classname="plenix.copier.Main" classpathref="runtime-classpath" fork="yes" dir="${examples.dir}">
+    		   <jvmarg value="-Djava.util.logging.config.file=logging.properties"/>
     		   <arg value="${test.script}"/>
     	</java>
     </target>

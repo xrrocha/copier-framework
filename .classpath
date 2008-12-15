@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="lib/js.jar"/>
 	<classpathentry kind="lib" path="lib/opencsv-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/serializer.jar"/>
-	<classpathentry kind="lib" path="lib/yamlbeans-0.9.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/yamlbeans-0.9.2.jar"/>
 	<classpathentry kind="output" path="build/classes/main"/>
 </classpath>
