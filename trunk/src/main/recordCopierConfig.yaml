@@ -22,6 +22,5 @@
 --- # Property element names
   plenix.record.util.FieldSpecHolder:
     fields: "plenix.record.util.FieldSpec"
-  plenix.record.fixed.FixedLengthCopierComponent: # Report bug -> property names seem to be global across target classes
-    fixedFields: "plenix.record.util.FixedFieldSpec"
-    
+  plenix.record.fixed.FixedLengthCopierComponent:
+    fixedFields: "plenix.record.util.FixedFieldSpec" # Bug persists...
