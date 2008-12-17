@@ -1,5 +1,6 @@
 package plenix.copier;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import plenix.copier.destination.Destination;
@@ -15,6 +16,7 @@ public class Copier<E> {
 
 	public void copy() throws Exception {
 	    try {
+	        if (logger.isLoggable(Level.FINE)) logger.fine("Opening copier source");
 	        source.open();
 	    } catch (Throwable t) {
 	        logger.severe("Error opening copier source: " + t);
@@ -22,6 +24,7 @@ public class Copier<E> {
 	    }
 
 		try {
+            if (logger.isLoggable(Level.FINE)) logger.fine("Opening copier destination");
 			destination.open();
 		} catch (Throwable t) {
 		    logger.severe("Error opening copier destination: " + t);
@@ -47,13 +50,16 @@ public class Copier<E> {
 				    logger.warning("Error putting record #" + count + ": " + t);
 				}
 			}
+            if (logger.isLoggable(Level.FINE)) logger.fine("Processed " + count + " records");
 		} finally {
 		    try {
+	            if (logger.isLoggable(Level.FINE)) logger.fine("Closing copier source");
 		        source.close();
 		    } catch (Throwable t) {
 		        logger.warning("Error closing copier source: " + t);
 		    }
             try {
+                if (logger.isLoggable(Level.FINE)) logger.fine("Closing copier destination");
                 destination.close();
             } catch (Throwable t) {
                 logger.warning("Error closing copier destination: " + t);
