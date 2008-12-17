@@ -9,14 +9,12 @@ import plenix.copier.source.Source;
 import plenix.record.Record;
 
 public class JDBCRecordSource extends JDBCCopierComponent implements Source<Record> {
-	private String sqlText;
-
 	private ResultSet resultSet;
 	
 	public void open() throws Exception {
 		Connection connection = getDataSource().getConnection();
 		Statement statement = connection.createStatement();
-		resultSet = statement.executeQuery(sqlText);
+		resultSet = statement.executeQuery(getSqlText());
 	}
 
 	public Record get() throws Exception {
@@ -39,13 +37,5 @@ public class JDBCRecordSource extends JDBCCopierComponent implements Source<Reco
 		resultSet.close();
 		statement.close();
 		connection.close();
-	}
-
-	public String getSqlText() {
-		return sqlText;
-	}
-
-	public void setSqlText(String sqlText) {
-		this.sqlText = sqlText;
 	}
 }
