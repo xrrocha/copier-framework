@@ -1,0 +1,20 @@
+---
+    source: !jdbcSource
+        sqlText: "SELECT * FROM estado"
+        dataSource: !oracle.jdbc.pool.OracleDataSource
+            URL: "jdbc:oracle:thin:ensurance/ensurance@localhost:1521:orcl"
+    destination: !jdbcDestination
+        batchSize: 1024
+        sqlText: "INSERT INTO estado(id, nombre, nombreClase, usuarioActualiza, fechaActualiza) VALUES (?, ?, ?, ?, ?)"
+        dataSource: !org.postgresql.ds.PGSimpleDataSource
+            user: ensurance
+            password: ensurance
+            serverName: localhost
+            databaseName: ensurance
+        fieldNames:
+            - "id"
+            - "nombre"
+            - "nombreClase"
+            - "usuarioActualiza"
+            - "fechaActualiza"
+            
