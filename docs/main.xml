@@ -241,8 +241,8 @@ public static void main(String[] args) {
         </p>
         <h2>Copying Framework</h2>
         <p>
-            Closer examination reveals that the <em>essence</em> of
-            copying is not restricted to <code>Record</code>s at all.
+            Closer examination reveals that the essence of copying objects over
+            is not restricted to <code>Record</code>s at all.
             In fact, objects of <em>any</em> type can be copied between
             sources and destinations following the simple but generic
             logic stated so far.
@@ -290,7 +290,7 @@ public class Copier<E> {
         </p>
 
         <h2>A Concrete Example: Delimited File Record Source</h2>
-        <image src="DelimitedFileRecordSource.png"/>
+        <image src="DelimitedFileRecordSource-1.png"/>
         <p>
             This class implements a record source that reads records from
             a delimited file as follows:
@@ -327,7 +327,7 @@ public class DelimitedFileRecordSource implements Source<Record> {
         ]]></source>
 
         <h2>Another Concrete Example: Delimited File Record Destination</h2>
-        <image src="DelimitedFileRecordDestination.png"/>
+        <image src="DelimitedFileRecordDestination-1.png"/>
         <p>
             This class writes a record into a delimited file output file
             as follows:
@@ -370,7 +370,7 @@ public class DelimitedFileRecordDestination implements Destination<Record> {
             an abstract superclass <code>DelimitedFileRecordComponent</code>
             as follows:
         </p>
-        <image src="DelimitedFileRecordComponent.png"/>
+        <image src="DelimitedFileRecordComponent-1.png"/>
 
         <h2>Improving on Input and Output</h2>
         <p>
@@ -426,12 +426,13 @@ public class FileInputStreamSource implements InputStreamSource {
 public class DelimitedFileRecordDestination implements Destination&lt;Record&gt; {
     private String separator = "\t";
     private List&lt;String&gt; fieldNames;
-    <u>private OutputStreamSource outputStreamSource;</u>
+    <strong>private OutputStreamSource outputStreamSource;</strong>
 
     private PrintWriter out;
 
     public void open() {
-        out = new PrintWriter(new OutputStreamWriter(<u>outputStreamSource.getOutputSource()</u>), true);
+        <strong>OutputStream os = outputStreamSource.getOutputSource()</strong>;
+        out = new PrintWriter(new OutputStreamWriter(os), true);
     }
 
     public void put(Record  record) {
