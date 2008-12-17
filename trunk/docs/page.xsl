@@ -46,10 +46,10 @@
     <xsl:template match="source">
         <table border="1" align="center">
             <tr>
-                <td style="color: navy; background-color: #ffff99">
+                <td style="color: blue; background-color: #ffffaa">
                     <pre>
                         <div style="font-family: 'Lucida Typewriter'">
-                            <strong><xsl:apply-templates/></strong>
+                            <xsl:apply-templates/>
                         </div>
                     </pre>
                 </td>
