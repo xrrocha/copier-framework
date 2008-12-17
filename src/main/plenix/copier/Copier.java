@@ -1,34 +1,63 @@
 package plenix.copier;
 
+import java.util.logging.Logger;
+
 import plenix.copier.destination.Destination;
 import plenix.copier.source.Source;
 import plenix.copier.transformer.Transformer;
 
 public class Copier<E> {
+    private static Logger logger = Logger.getLogger(Copier.class.getName());
+    
 	private Source<E> source;
 	private Destination<E> destination;
 	private Transformer<E> transformer;
 
 	public void copy() throws Exception {
-		source.open();
+	    try {
+	        source.open();
+	    } catch (Throwable t) {
+	        logger.severe("Error opening copier source: " + t);
+	        throw new CopierException("Error opening copier source", t);
+	    }
+
 		try {
 			destination.open();
-		} catch (Exception e) {
-			source.close();
-			throw e;
+		} catch (Throwable t) {
+		    logger.severe("Error opening copier destination: " + t);
+			try {
+			    source.close();
+			} catch (Throwable et) {
+	            logger.warning("Error closing copier source: " + t);
+			}
+			throw new CopierException("Error opening copier destination", t);
 		}
 
 		try {
 			E element;
-			while ((element = source.get()) != null) {
+            int count;
+			for (count = 1; (element = source.get()) != null; count++) {
 				if (transformer != null) {
+				    // TODO Handle transformation errors
 					element = transformer.transform(element);
 				}
-				destination.put(element);
+				try {
+	                destination.put(element);
+				} catch (Throwable t) {
+				    logger.warning("Error putting record #" + count + ": " + t);
+				}
 			}
 		} finally {
-		    try { source.close(); } catch (Exception e) {}
-            try { destination.close(); } catch (Exception e) {}
+		    try {
+		        source.close();
+		    } catch (Throwable t) {
+		        logger.warning("Error closing copier source: " + t);
+		    }
+            try {
+                destination.close();
+            } catch (Throwable t) {
+                logger.warning("Error closing copier destination: " + t);
+            }
 		}
 	}
 
