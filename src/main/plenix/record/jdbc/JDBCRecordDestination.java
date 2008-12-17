@@ -3,11 +3,14 @@ package plenix.record.jdbc;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
+import java.util.logging.Logger;
 
 import plenix.copier.destination.Destination;
 import plenix.record.Record;
 
 public class JDBCRecordDestination extends JDBCCopierComponent implements Destination<Record> {
+    private static final Logger logger = Logger.getLogger(JDBCRecordDestination.class.getName());
+    
 	private String[] fieldNames;
 
 	private int batchSize = 1;
@@ -25,10 +28,15 @@ public class JDBCRecordDestination extends JDBCCopierComponent implements Destin
 		ResultSetMetaData metaData = statement.getMetaData();
 		for (int i = 0; i < fieldNames.length; i++) {
 			Object object = record.getField(fieldNames[i]);
+            statement.setObject(i + 1, object);
 			if (object != null) {
 				statement.setObject(i + 1, object);
 			} else {
-				statement.setNull(i + 1, metaData.getColumnType(i + 1));
+		        if (metaData != null) {
+	                statement.setNull(i + 1, metaData.getColumnType(i + 1));
+		        } else {
+	                statement.setObject(i + 1, null);
+		        }
 			}
 		}
 
