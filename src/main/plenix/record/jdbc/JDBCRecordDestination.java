@@ -9,6 +9,7 @@ import plenix.copier.destination.Destination;
 import plenix.record.Record;
 
 public class JDBCRecordDestination extends JDBCCopierComponent implements Destination<Record> {
+    @SuppressWarnings("unused")
     private static final Logger logger = Logger.getLogger(JDBCRecordDestination.class.getName());
     
 	private String[] fieldNames;
@@ -28,7 +29,6 @@ public class JDBCRecordDestination extends JDBCCopierComponent implements Destin
 		ResultSetMetaData metaData = statement.getMetaData();
 		for (int i = 0; i < fieldNames.length; i++) {
 			Object object = record.getField(fieldNames[i]);
-            statement.setObject(i + 1, object);
 			if (object != null) {
 				statement.setObject(i + 1, object);
 			} else {
@@ -42,7 +42,8 @@ public class JDBCRecordDestination extends JDBCCopierComponent implements Destin
 
 		statement.addBatch();
 		if (++rowCount % batchSize == 0) {
-			statement.executeBatch();
+            logger.info("Batch execution point reached: " + rowCount);
+		    statement.executeBatch();
 			if (commit) {
 				statement.getConnection().commit();
 			}

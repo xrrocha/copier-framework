@@ -1,27 +1,21 @@
 ---
-#    source: !jdbcSource
-#        sqlText: "SELECT * FROM estado"
-#        dataSource: !oracle.jdbc.pool.OracleDataSource
-#            URL: "jdbc:oracle:thin:ensurance/ensurance@localhost:1521:orcl"
     source: !jdbcSource
-        sqlText: "SELECT * FROM estado"
-        dataSource: !org.postgresql.ds.PGSimpleDataSource
-            user: ensurance
-            password: ensurance
-            serverName: localhost
-            databaseName: ensurance
+        sqlText: "SELECT * FROM agente"
+        dataSource: !oracle.jdbc.pool.OracleDataSource
+            URL: "jdbc:oracle:thin:ensurance/ensurance@localhost:1521:xe"
     destination: !jdbcDestination
-        batchSize: 1024
-        sqlText: "INSERT INTO x_estado(id, nombre, nombreClase, usuarioActualiza, fechaActualiza) VALUES (?, ?, ?, ?, ?)"
+        batchSize: 4096
+        sqlText: "INSERT INTO agente(id, fechaInicioOperacion, numeroCredencial, entidadId, usuarioActualiza, fechaActualiza) VALUES (?, ?, ?, ?, ?, ?)"
         dataSource: !org.postgresql.ds.PGSimpleDataSource
             user: ensurance
             password: ensurance
             serverName: localhost
             databaseName: ensurance
         fieldNames:
-            - "id"
-            - "nombre"
-            - "nombreClase"
-            - "usuarioActualiza"
-            - "fechaActualiza"
+            - "ID"
+            - "FECHAINICIOOPERATION"
+            - "NUMEROCREDENCIAL"
+            - "ENTIDADID"
+            - "USUARIOACTUALIZA"
+            - "FECHAACTUALIZA"
             
