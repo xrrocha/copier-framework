@@ -13,6 +13,7 @@ public class Copier<E> {
 	private Source<E> source;
 	private Destination<E> destination;
 	private Transformer<E> transformer;
+	private boolean stopOnError = false;
 
 	public void copy() throws Exception {
 	    try {
@@ -47,7 +48,12 @@ public class Copier<E> {
 				try {
 	                destination.put(element);
 				} catch (Throwable t) {
-				    logger.warning("Error putting record #" + count + ": " + t);
+				    if (stopOnError) {
+	                    logger.severe("Error putting record #" + count + ": " + t);
+	                    throw new CopierException("Error putting record #" + count, t);
+				    } else {
+	                    logger.warning("Error putting record #" + count + ": " + t);
+				    }
 				}
 			}
             if (logger.isLoggable(Level.FINE)) logger.fine("Processed " + count + " records");
@@ -90,4 +96,12 @@ public class Copier<E> {
 	public void setTransformer(Transformer<E> transformer) {
 		this.transformer = transformer;
 	}
+
+    public boolean isStopOnError() {
+        return stopOnError;
+    }
+
+    public void setStopOnError(boolean stopOnError) {
+        this.stopOnError = stopOnError;
+    }
 }
