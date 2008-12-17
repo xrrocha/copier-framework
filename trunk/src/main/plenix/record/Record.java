@@ -22,6 +22,10 @@ public class Record {
 		fields.clear();
 	}
 	
+	public int size() {
+	    return fields.size();
+	}
+	
 	public Set<String> fieldNames() {
 		return fields.keySet();
 	}
