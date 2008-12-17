@@ -8,7 +8,6 @@ import plenix.copier.destination.Destination;
 import plenix.record.Record;
 
 public class JDBCRecordDestination extends JDBCCopierComponent implements Destination<Record> {
-	private String sqlText;
 	private String[] fieldNames;
 
 	private int batchSize = 1;
@@ -19,7 +18,7 @@ public class JDBCRecordDestination extends JDBCCopierComponent implements Destin
 	
 	public void open() throws Exception {
 		Connection connection = getDataSource().getConnection();
-		statement = connection.prepareStatement(sqlText);
+		statement = connection.prepareStatement(getSqlText());
 	}
 
 	public void put(Record record) throws Exception {
@@ -72,13 +71,5 @@ public class JDBCRecordDestination extends JDBCCopierComponent implements Destin
 
 	public void setFieldNames(String[] fieldNames) {
 		this.fieldNames = fieldNames;
-	}
-
-	public String getSqlText() {
-		return sqlText;
-	}
-
-	public void setSqlText(String sqlText) {
-		this.sqlText = sqlText;
 	}
 }
