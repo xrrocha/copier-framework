@@ -40,10 +40,19 @@ public class Copier<E> {
 		try {
 			E element;
             int count;
-			for (count = 1; (element = source.get()) != null; count++) {
+			for (count = 0; (element = source.get()) != null; count++) {
 				if (transformer != null) {
-				    // TODO Handle transformation errors
-					element = transformer.transform(element);
+	                try {
+	                    element = transformer.transform(element);
+	                } catch (Throwable t) {
+	                    if (stopOnError) {
+	                        logger.severe("Error transforming record #" + count + ": " + t);
+	                        throw new CopierException("Error transforming record #" + count, t);
+	                    } else {
+	                        logger.warning("Error transforming record #" + count + ": " + t);
+	                        continue;
+	                    }
+	                }
 				}
 				try {
 	                destination.put(element);
