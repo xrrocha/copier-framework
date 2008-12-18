@@ -1,0 +1,31 @@
+---
+    stopOnError: true
+    source: !jdbcSource
+        sqlText: "SELECT * FROM reserva"
+        dataSource: !oracle.jdbc.pool.OracleDataSource
+            URL: "jdbc:oracle:thin:ensurance/ensurance@localhost:1521:xe"
+    destination: !jdbcDestination
+        batchSize: 16384
+        sqlText: "INSERT INTO reserva VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        dataSource: !org.postgresql.ds.PGSimpleDataSource
+            user: ensurance
+            password: ensurance
+            serverName: localhost
+            databaseName: ensurance
+        fieldNames:
+            - "ID"
+            - "SUBRECLAMOID"
+            - "NUMERO"
+            - "FECHARESERVA"
+            - "VALORINDEMNIZACION"
+            - "VALORGASTO"
+            - "VALORTOTAL"
+            - "TIPO"
+            - "MOTIVO"
+            - "USUARIOACTUALIZA"
+            - "FECHAACTUALIZA"
+            - "FORMA"
+            - "AUTORIZACIONID"
+            - "ESTADOID"
+            - "ORDENPAGOID"
+            - "ASIENTOID"

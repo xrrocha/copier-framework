@@ -1,0 +1,27 @@
+---
+    stopOnError: true
+    source: !jdbcSource
+        sqlText: "SELECT * FROM contragarantia"
+        dataSource: !oracle.jdbc.pool.OracleDataSource
+            URL: "jdbc:oracle:thin:ensurance/ensurance@localhost:1521:xe"
+    destination: !jdbcDestination
+        batchSize: 16384
+        sqlText: "INSERT INTO contragarantia VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        dataSource: !org.postgresql.ds.PGSimpleDataSource
+            user: ensurance
+            password: ensurance
+            serverName: localhost
+            databaseName: ensurance
+        fieldNames:
+            - "ID"
+            - "NUMERO"
+            - "VALOR"
+            - "REFERENCIA"
+            - "FECHAINGRESO"
+            - "SALDO"
+            - "TIPOCONTRAGARANTIAID"
+            - "CLIENTEID"
+            - "ESTADOID"
+            - "RECIBIDA"
+            - "USUARIOACTUALIZA"
+            - "FECHAACTUALIZA"

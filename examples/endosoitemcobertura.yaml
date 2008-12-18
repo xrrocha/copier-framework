@@ -1,0 +1,38 @@
+---
+    stopOnError: true
+    source: !jdbcSource
+        sqlText: "SELECT * FROM endosoItemCobertura"
+        dataSource: !oracle.jdbc.pool.OracleDataSource
+            URL: "jdbc:oracle:thin:ensurance/ensurance@localhost:1521:xe"
+    destination: !jdbcDestination
+        batchSize: 16384
+        sqlText: "INSERT INTO endosoItemCobertura VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        dataSource: !org.postgresql.ds.PGSimpleDataSource
+            user: ensurance
+            password: ensurance
+            serverName: localhost
+            databaseName: ensurance
+        fieldNames:
+            - "ID"
+            - "COBERTURAID"
+            - "ENDOSOITEMID"
+            - "AFECTAGRUPO"
+            - "AFECTAPRIMA"
+            - "AFECTAVALORASEGURADO"
+            - "ORDEN"
+            - "SECCION"
+            - "TEXTO"
+            - "LIMITE"
+            - "MONTOCOBERTURA"
+            - "PRIMACOBERTURANETA"
+            - "PORCENTAJECOMISIONORMAL"
+            - "PORCENTAJECOMISIOESPECIAL"
+            - "TASACOBERTURA"
+            - "COBERTURAGENERALID"
+            - "ESPRIMAFIJA"
+            - "MODIFICADA"
+            - "FECHAACTUALIZA"
+            - "USUARIOACTUALIZA"
+            - "LIMITECOBERTURA"
+            - "ESTADORIESGO"
+            
