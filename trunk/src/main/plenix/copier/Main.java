@@ -72,6 +72,10 @@ public class Main {
 
         Copier<?> copier = reader.read(Copier.class);
         
+        long start = System.currentTimeMillis();
         copier.copy();
+        long end = System.currentTimeMillis();
+        
+        logger.info("Elapsed time: " + ((end - start) / 1000) + " seconds");
     }
 }
