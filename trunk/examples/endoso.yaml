@@ -1,0 +1,41 @@
+---
+    stopOnError: true
+    source: !jdbcSource
+        sqlText: "SELECT * FROM endoso"
+        dataSource: !oracle.jdbc.pool.OracleDataSource
+            URL: "jdbc:oracle:thin:ensurance/ensurance@localhost:1521:xe"
+    destination: !jdbcDestination
+        batchSize: 16384
+        sqlText: "INSERT INTO endoso VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        dataSource: !org.postgresql.ds.PGSimpleDataSource
+            user: ensurance
+            password: ensurance
+            serverName: localhost
+            databaseName: ensurance
+        fieldNames:
+            - "ID"
+            - "NUMERO"
+            - "FECHAANULACION"
+            - "FECHAELABORACION"
+            - "PORCCOMISIONAGENTE"
+            - "VALORASEGURADO"
+            - "VALORCOMISION"
+            - "VALORPRIMANETA"
+            - "VIGENCIADESDE"
+            - "VIGENCIAHASTA"
+            - "POLIZAID"
+            - "TIPOENDOSOID"
+            - "SUCURSALID"
+            - "TIPOITEMID"
+            - "OBSERVACIONES"
+            - "CLIENTEID"
+            - "AUTORIZACIONID"
+            - "USUARIOACTUALIZA"
+            - "FECHAACTUALIZA"
+            - "ESDATOOTROSISTEMA"
+            - "UNIDADNEGOCIOID"
+            - "EXCENTOIVA"
+            - "ESAUTOMATICO"
+            - "ESAJUSTEVIGENCIA"
+            - "AUTORIZACIONCID"
+            - "AUTORIZACIONBID"
